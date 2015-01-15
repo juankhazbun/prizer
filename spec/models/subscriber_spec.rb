@@ -18,6 +18,14 @@ describe Subscriber, :type => :model do
         should_not be_valid
       end
       
+      it 'when email address is alreday subscribed' do
+        @subscriber.email = "123@example.com"
+        @subscriber.save
+        user_with_same_email = @subscriber.dup
+        user_with_same_email.save
+        should_not be_valid
+      end
+      
     end
   
   
