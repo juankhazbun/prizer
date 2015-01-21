@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150115162152) do
+ActiveRecord::Schema.define(version: 20150121154005) do
 
   create_table "prizes", force: true do |t|
     t.string   "description"
@@ -22,6 +22,15 @@ ActiveRecord::Schema.define(version: 20150115162152) do
 
   create_table "subscribers", force: true do |t|
     t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "username"
+    t.string   "email"
+    t.string   "encrypted_password"
+    t.string   "salt"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
