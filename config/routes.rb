@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   
+  resources :prizes
+
   resources :subscribers
 
   root :to => 'static_pages#home' 
