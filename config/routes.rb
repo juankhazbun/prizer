@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
   
-  resources :users
-
-  resources :prizes
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
 
   resources :subscribers
 
