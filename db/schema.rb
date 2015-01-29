@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150125013150) do
+ActiveRecord::Schema.define(version: 20150129163542) do
 
   create_table "admin_users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -32,8 +32,8 @@ ActiveRecord::Schema.define(version: 20150125013150) do
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
 
   create_table "conditions", force: true do |t|
-    t.string   "type"
-    t.string   "condition"
+    t.string   "cond_type"
+    t.string   "criteria"
     t.string   "offset"
     t.datetime "created_at"
     t.datetime "updated_at"
