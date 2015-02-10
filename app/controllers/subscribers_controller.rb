@@ -1,67 +1,29 @@
 class SubscribersController < ApplicationController
   before_action :set_subscriber, only: [:show, :edit, :update, :destroy]
   
-  attr_accessor :email
-
-  # GET /subscribers
-  # GET /subscribers.json
-  def index
-    @subscribers = Subscriber.all
-  end
-
-  # GET /subscribers/1
-  # GET /subscribers/1.json
-  def show
-  end
+  attr_accessor :email  
 
   # GET /subscribers/new
   def new
     @subscriber = Subscriber.new
   end
 
-  # GET /subscribers/1/edit
-  def edit
-  end
-
   # POST /subscribers
-  # POST /subscribers.json
   def create
     @subscriber = Subscriber.new(subscriber_params)
-
-    respond_to do |format|
-      if @subscriber.save
-        format.html { redirect_to @subscriber, notice: 'Subscriber was successfully created.' }
-        format.json { render :show, status: :created, location: @subscriber }
-      else
-        format.html { render "static_pages/home" }
-        format.json { render json: @subscriber.errors, status: :unprocessable_entity }
-      end
+    
+    if @subscriber.save
+      
+      # Check if the subscriber win a prize
+      winners = @subscriber.check_prize(@subscriber.id)    
+      
+      puts "The subscriber win conditions " + winners.inspect
+      
+      redirect_to @subscriber, notice: 'Subscriber was successfully created.'
+    else
+      render "static_pages/home" 
     end
-  end
-
-  # PATCH/PUT /subscribers/1
-  # PATCH/PUT /subscribers/1.json
-  def update
-    respond_to do |format|
-      if @subscriber.update(subscriber_params)
-        format.html { redirect_to @subscriber, notice: 'Subscriber was successfully updated.' }
-        format.json { render :show, status: :ok, location: @subscriber }
-      else
-        format.html { render :edit }
-        format.json { render json: @subscriber.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /subscribers/1
-  # DELETE /subscribers/1.json
-  def destroy
-    @subscriber.destroy
-    respond_to do |format|
-      format.html { redirect_to subscribers_url, notice: 'Subscriber was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  end  
 
   private
     # Use callbacks to share common setup or constraints between actions.
