@@ -4,63 +4,94 @@ class Subscriber < ActiveRecord::Base
   validates_uniqueness_of :email, conditions: -> { where(:created_at => (Time.now.beginning_of_day..Time.now.end_of_day)) }, :message => "can only be entered once a day"
   
   def check_prize(id)
-    # Get all the conditions 
-    conditions = Condition.all
     
-    winner_conditions = []
-    win = ""
-    
-    puts "Checking conditions"
-    
-    # Traverse all conditions to apply to the id
-    conditions.each do |condition|
+    # Verify if the subscriber won a prize by carambola
+    if (Winner.exists?(subscriber_id: id))
       
-      # Check if the type of the condition is a list
-      if condition.cond_type == 'list'
+      # Get winner
+      winner = Winner.where("subscriber_id = ?", id).first
+      
+      # Get assigned prize
+      prize = Prize.where("id = ?", winner.prize_id).first
+     
+      puts "Carambola winner found. Prize assigned: #{prize.description}"
+      
+      # Mark winner as assigned
+      winner.update_attribute(:assigned, true)
+      
+    else
+    
+      # Get all the conditions 
+      conditions = Condition.all
+      
+      winner_conditions = []
+      win = ""
+      assigned_winner = 1   
+      
+      puts "Checking conditions"
+      
+      # Traverse all conditions to apply to the id
+      conditions.each do |condition|
         
-        # Check if the id is in the string
-        win = condition.criteria.include? id   
-        
-        puts "condition evaluated to " +  win.to_s     
-        
-      else
-        
-        # Check if the id is greater than the offset
-        if condition.offset != "" || condition.offset.to_i < id     
+        # Check if the type of the condition is a list
+        if condition.cond_type == 'list'
           
-          eval = id.send(condition.cond_type, condition.criteria.to_i)      
+          # Check if the id is in the string
+          win = condition.criteria.include? id.to_s   
+          
+          puts "condition evaluated to " +  win.to_s     
+          
+        else
+          
+          # Check if the id is greater than the offset
+          if condition.offset != "" || condition.offset.to_i < id     
+            
+            eval = id.send(condition.cond_type, condition.criteria.to_i)      
+          
+            # Check if the condition is fullfilled
+            if eval.is_a? Integer
+              win = eval == 0 ? true : false
+            else
+              win = eval
+            end
+            
+            puts "condition evaluated to " +  win.to_s
+          
+          end
+        end
         
-          # Check if the condition is fullfilled
-          if eval.is_a? Integer
-            win = eval == 0 ? true : false
-          else
-            win = eval
+        # Check if the subscriber win the condition
+        if win
+          
+          prize = condition.prize
+          
+          puts "Prize related: #{prize.description} - existences: #{prize.existences}"
+          
+          # Check if the prize associated to that condition 
+          if prize.existences > 0
+            
+            # Subscriber win the prize
+            puts "Subscriber won a #{prize.description}"
+            
+            # Check if the winner is already in the list
+            
+            # Register winner
+            Winner.create(subscriber_id: id, prize_id: prize.id, assigned: assigned_winner)
+            
+            # Decrement prize stock
+            prize.decrement!(:existences)
+            
+            assigned_winner = 0
+            
+            # Increment the id for the carambola winner
+            id = id + 1
+            
           end
           
-          puts "condition evaluated to " +  win.to_s
-        
-        end
-      end
-      
-      # Check if the subscriber win the condition
-      if win
-        
-        prize = condition.prize
-        
-        puts "Prize related: #{prize.description} - existences: #{prize.existences}"
-        
-        # Check if the prize associated to that condition 
-        if prize.existences > 0
-          
-          # Subscriber win the prize
-          puts "Subscriber won a #{prize.description}"
-          
         end
         
       end
-      
     end
-    return winner_conditions
   end
   
 end
