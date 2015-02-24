@@ -15,11 +15,14 @@ class SubscribersController < ApplicationController
     if @subscriber.save
       
       # Check if the subscriber win a prize
-      winners = @subscriber.check_prize(@subscriber.id)    
+      prize = @subscriber.check_prize(@subscriber.id)
       
-      puts "The subscriber win conditions " + winners.inspect
+      if (prize != "")
+        redirect_to @subscriber, notice: "You won a #{prize}."
+      else
+        redirect_to @subscriber, notice: 'You almost get it. Try again!'
+      end
       
-      redirect_to @subscriber, notice: 'Subscriber was successfully created.'
     else
       render "static_pages/home" 
     end

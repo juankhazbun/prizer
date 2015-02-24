@@ -3,7 +3,9 @@ class Subscriber < ActiveRecord::Base
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }
   validates_uniqueness_of :email, conditions: -> { where(:created_at => (Time.now.beginning_of_day..Time.now.end_of_day)) }, :message => "can only be entered once a day"
   
-  def check_prize(id)
+  def check_prize(id)    
+    
+    prize_win = ""
     
     # Verify if the subscriber won a prize by carambola
     if (Winner.exists?(subscriber_id: id))
@@ -19,14 +21,15 @@ class Subscriber < ActiveRecord::Base
       # Mark winner as assigned
       winner.update_attribute(:assigned, true)
       
+      prize_win = prize.description      
+      
     else
     
       # Get all the conditions 
       conditions = Condition.all
       
       winner_conditions = []
-      win = ""
-      assigned_winner = 1   
+      assigned_winner = true   
       
       puts "Checking conditions"
       
@@ -39,7 +42,7 @@ class Subscriber < ActiveRecord::Base
           # Check if the id is in the string
           win = condition.criteria.include? id.to_s   
           
-          puts "condition evaluated to " +  win.to_s     
+          puts "condition ##{condition.id} evaluated to " +  win.to_s     
           
         else
           
@@ -55,7 +58,7 @@ class Subscriber < ActiveRecord::Base
               win = eval
             end
             
-            puts "condition evaluated to " +  win.to_s
+            puts "condition ##{condition.id} evaluated to " +  win.to_s
           
           end
         end
@@ -74,24 +77,31 @@ class Subscriber < ActiveRecord::Base
             puts "Subscriber won a #{prize.description}"
             
             # Check if the winner is already in the list
+            if (!Winner.exists?(subscriber_id: id))
             
-            # Register winner
-            Winner.create(subscriber_id: id, prize_id: prize.id, assigned: assigned_winner)
-            
-            # Decrement prize stock
-            prize.decrement!(:existences)
-            
-            assigned_winner = 0
-            
-            # Increment the id for the carambola winner
-            id = id + 1
+              # Register winner
+              Winner.create(subscriber_id: id, prize_id: prize.id, assigned: assigned_winner)
+              
+              # Decrement prize stock
+              prize.decrement!(:existences)
+              
+              if (assigned_winner)
+                prize_win = prize.description
+                assigned_winner = false
+              end
+              
+              # Increment the id for the carambola winner
+              id = id + 1
+            end
             
           end
           
         end
         
       end
+      
     end
+    return prize_win
   end
   
 end
