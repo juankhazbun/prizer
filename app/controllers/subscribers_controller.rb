@@ -18,11 +18,11 @@ class SubscribersController < ApplicationController
       prize = @subscriber.check_prize(@subscriber.id)
       
       if (prize != "")
-        redirect_to @subscriber, notice: "You won a #{prize}."
+        flash[:success] = "Congratulations!!!. You won a #{prize}."        
       else
-        redirect_to @subscriber, notice: 'You almost get it. Try again!'
+        flash[:danger] = 'You almost get it. Try again!'
       end
-      
+      redirect_to @subscriber
     else
       render "static_pages/home" 
     end
