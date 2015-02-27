@@ -10,9 +10,6 @@ ActiveAdmin.register Condition do
       input :criteria
       input :offset, label: 'After'
     end
-    #panel 'Markup' do
-    #  "The following can be used in the content below..."
-    #end
     actions
   end
 end
