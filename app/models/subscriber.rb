@@ -8,6 +8,10 @@ class Subscriber < ActiveRecord::Base
   
   def check_prize(id)    
     
+    puts "\n\n\n\n**********************************************************"
+    puts "\n Checking for prizes"
+    puts "\n ***********************************************************"
+    
     prize_win = ""
     
     # Verify if the subscriber won a prize by carambola
@@ -83,7 +87,7 @@ class Subscriber < ActiveRecord::Base
             if (!Winner.exists?(subscriber_id: id))
             
               # Register winner
-              Winner.create(subscriber_id: id, prize_id: prize.id, assigned: assigned_winner)
+              Winner.create(subscriber_id: id, prize_id: prize.id, assigned: assigned_winner, date_won: Time.now)
               
               # Decrement prize stock
               prize.decrement!(:existences)
