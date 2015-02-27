@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150220223444) do
+ActiveRecord::Schema.define(version: 20150225164330) do
 
   create_table "admin_users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -63,9 +63,10 @@ ActiveRecord::Schema.define(version: 20150220223444) do
   end
 
   create_table "winners", force: true do |t|
-    t.integer "subscriber_id"
-    t.integer "prize_id"
-    t.boolean "assigned"
+    t.integer  "subscriber_id"
+    t.integer  "prize_id"
+    t.boolean  "assigned"
+    t.datetime "date_won"
   end
 
 end
