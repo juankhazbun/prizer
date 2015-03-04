@@ -1,12 +1,6 @@
 class SubscribersController < ApplicationController
-  before_action :set_subscriber, only: [:show, :edit, :update, :destroy]
   
   attr_accessor :email  
-
-  # GET /subscribers/new
-  def new
-    @subscriber = Subscriber.new
-  end
 
   # POST /subscribers
   def create
@@ -28,12 +22,7 @@ class SubscribersController < ApplicationController
     end
   end  
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_subscriber
-      @subscriber = Subscriber.find(params[:id])
-    end
-
+  private 
     # Never trust parameters from the scary internet, only allow the white list through.
     def subscriber_params
       params.require(:subscriber).permit(:email)
