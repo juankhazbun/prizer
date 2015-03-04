@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :prize do
-    description "MyString"
-existences 1
+    description "Prize #1"
+    existences 1
   end
 
 end

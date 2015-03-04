@@ -1,21 +1,48 @@
 require 'rails_helper'
 
-RSpec.describe Condition, :type => :model do
+describe Condition do
+  
+  before :all do
+    @condition = build(:condition)
+  end
+  
+  it 'should belong to a prize' do
+    should belong_to(:prize)
+  end
+  
+  it 'is valid with a prize, type and criteria' do
+    expect(@condition).to be_valid
+  end
+  
+  it 'should allow a valid type' do
+    should validate_inclusion_of(:cond_type).in_array(['%', '<', '>', 'list'])
+  end
   
   context 'is invalid' do
     
-    before :all do
-        @condition = Condition.new
-      end
+    it 'whitout a type' do
+      @condition.cond_type = nil
+      expect(@condition).not_to be_valid
+    end
     
-    it 'when description is empty' do
-      @condition.criteria = ''
-      should_not be_valid
+    it 'whitout a criteria' do
+      @condition.criteria = nil
+      expect(@condition).not_to be_valid
+    end
+    
+    it 'when is not a number' do
+      @condition.criteria = 'a'
+      expect(@condition).not_to be_valid
+    end
+    
+    it 'when is not a list of numbers' do
+      @condition.criteria = 'a,a,a'
+      expect(@condition).not_to be_valid
     end
     
     it 'when offset is not numeric' do
         @condition.offset = 'a'
-        should_not be_valid
+        expect(@condition).not_to be_valid
       end
   end
   
