@@ -1,5 +1,9 @@
 FactoryGirl.define do
   factory :subscriber do 
-    email 'prueba@domain.com'
-  end
+    email { Faker::Internet.email }
+    
+    factory :invalid_subscriber do
+      email 'a'
+    end
+  end  
 end
