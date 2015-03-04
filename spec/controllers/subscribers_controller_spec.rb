@@ -25,7 +25,7 @@ describe SubscribersController do
 
       it "renders static_pages/home" do
         post :create, subscriber: attributes_for(:invalid_subscriber)
-        expect(response).to render_template("static_pages/home")
+        expect(response).to render_template("static_pages/home") 
       end
     end
   end  
