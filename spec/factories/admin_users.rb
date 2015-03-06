@@ -12,6 +12,15 @@ FactoryGirl.define do
       email 'admin@example.com'
       password ''
     end
+    
+    factory :new_admin_user do
+      email { Faker::Internet.email }
+      password { Faker::Internet.password }
+    end
+    
+    factory :new_admin_password do
+      password { Faker::Internet.password }
+    end
   end
 
 end
