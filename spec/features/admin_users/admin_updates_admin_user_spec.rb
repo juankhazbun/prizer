@@ -11,8 +11,8 @@ feature 'Admin updates an admin user' do
     sign_up_with admin    
     visit admin_admin_users_path    
     find(:xpath, "//a[@href='/admin/admin_users/2/edit']").click
-    fill_in 'Password*', with: new_admin_email.password
-    fill_in 'Password confirmation', with: new_admin_email.password
+    fill_in 'Password*', with: new_admin_password.password
+    fill_in 'Password confirmation', with: new_admin_password.password
     click_button 'Update Admin user'   
     expect(page).to have_content 'Admin user was successfully updated.'
   end
