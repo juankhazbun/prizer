@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 feature 'Admin signs up' do  
+  
+  let!(:admin) { create(:admin_user) }  
     
   scenario 'with valid email and password' do
     admin = build(:admin_user)
