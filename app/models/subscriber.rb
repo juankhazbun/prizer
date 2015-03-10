@@ -4,41 +4,42 @@ class Subscriber < ActiveRecord::Base
   
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }
-  validates_uniqueness_of :email, conditions: -> { where(:created_at => (Time.now.beginning_of_day..Time.now.end_of_day)) }, :message => "can only be entered once a day"
+  validates_uniqueness_of :email, conditions: -> { where(:created_at => (Time.now.beginning_of_day..Time.now.end_of_day)) }, 
+      :message => "can only be entered once a day"
   
-  def check_prize(id)    
+  # Function to check if a subscriber won a prize
+  # applying the existing conditions
+  #   
+  # === Return
+  # * +prize_won+ - Description of the awarded prize
+  #
+  # Author::  Juan Carlos Hazbun Nieto
+  # Version:: 2.0, March 2015
+  def check_prize 
     
-    puts "\n\n\n\n**********************************************************"
-    puts "\n Checking for prizes"
-    puts "\n ***********************************************************"
+    id = self.id
     
-    prize_win = ""
+    prize_won = ""
     
     # Verify if the subscriber won a prize by carambola
-    if (Winner.exists?(subscriber_id: id))
+    if (Winner.exists?(subscriber_id: self.id))
       
       # Get winner
-      winner = Winner.where("subscriber_id = ?", id).first
+      winner = Winner.where("subscriber_id = ?", self.id).first
       
       # Get assigned prize
       prize = Prize.where("id = ?", winner.prize_id).first
-     
-      puts "Carambola winner found. Prize assigned: #{prize.description}"
       
       # Mark winner as assigned
       winner.update_attribute(:assigned, true)
       
-      prize_win = prize.description      
+      prize_won = prize.description      
       
     else
     
       # Get all the conditions 
       conditions = Condition.all
-      
-      winner_conditions = []
       assigned_winner = true   
-      
-      puts "Checking conditions"
       
       # Traverse all conditions to apply to the id
       conditions.each do |condition|
@@ -47,16 +48,14 @@ class Subscriber < ActiveRecord::Base
         if condition.cond_type == 'list'
           
           # Check if the id is in the string
-          win = condition.criteria.include? id.to_s   
-          
-          puts "condition ##{condition.id} evaluated to " +  win.to_s     
+          win = condition.criteria.include? self.id.to_s 
           
         else
           
           # Check if the id is greater than the offset
-          if condition.offset != "" || condition.offset.to_i < id     
+          if condition.offset == "" || condition.offset.to_i < self.id     
             
-            eval = id.send(condition.cond_type, condition.criteria.to_i)      
+            eval = self.id.send(condition.cond_type, condition.criteria.to_i)   
           
             # Check if the condition is fullfilled
             if eval.is_a? Integer
@@ -65,35 +64,30 @@ class Subscriber < ActiveRecord::Base
               win = eval
             end
             
-            puts "condition ##{condition.id} evaluated to " +  win.to_s
-          
           end
         end
         
         # Check if the subscriber win the condition
         if win
           
-          prize = condition.prize
+          #puts "condition##{condition.id} won with criteria: #{condition.criteria}"
           
-          puts "Prize related: #{prize.description} - existences: #{prize.existences}"
+          prize = condition.prize
           
           # Check if the prize associated to that condition 
           if prize.existences > 0
-            
-            # Subscriber win the prize
-            puts "Subscriber won a #{prize.description}"
             
             # Check if the winner is already in the list
             if (!Winner.exists?(subscriber_id: id))
             
               # Register winner
-              Winner.create(subscriber_id: id, prize_id: prize.id, assigned: assigned_winner, date_won: Time.now)
+              new_winner = Winner.create(subscriber_id: id, prize_id: prize.id, assigned: assigned_winner, date_won: Time.now)
               
               # Decrement prize stock
               prize.decrement!(:existences)
               
               if (assigned_winner)
-                prize_win = prize.description
+                prize_won = prize.description
                 assigned_winner = false
               end
               
@@ -108,7 +102,7 @@ class Subscriber < ActiveRecord::Base
       end
       
     end
-    return prize_win
+    return prize_won
   end
   
 end
