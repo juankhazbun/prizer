@@ -4,6 +4,12 @@ FactoryGirl.define do
     subscriber_id 1
     assigned true
     date_won Time.now
+  
+    factory :unassigned_winner do
+      association :prize
+      assigned false
+      date_won Time.now
+    end
   end
 
 end
