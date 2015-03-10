@@ -9,7 +9,7 @@ class SubscribersController < ApplicationController
     if @subscriber.save
       
       # Check if the subscriber win a prize
-      prize = @subscriber.check_prize(@subscriber.id)
+      prize = @subscriber.check_prize
       
       if (prize != "")
         flash[:success] = "Congratulations!!!. You won a #{prize}."        
