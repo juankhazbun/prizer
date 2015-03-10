@@ -22,7 +22,7 @@ describe Prize do
     
   end  
   
-  it 'is valid with a description and existences' do
+  it 'is valid with a description and number of existences' do
     expect(@prize).to be_valid
   end
   

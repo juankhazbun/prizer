@@ -30,12 +30,12 @@ describe Condition do
       expect(@condition).not_to be_valid
     end
     
-    it 'when is not a number' do
+    it 'when criteria is not a number' do
       @condition.criteria = 'a'
       expect(@condition).not_to be_valid
     end
     
-    it 'when is not a list of numbers' do
+    it 'when criteria is not a list of numbers' do
       @condition.criteria = 'a,a,a'
       expect(@condition).not_to be_valid
     end
