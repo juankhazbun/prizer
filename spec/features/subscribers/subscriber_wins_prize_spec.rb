@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-feature 'Admin creates a new prize' do
+feature 'A subscriber' do
   
   let!(:condition) { create(:condition) }  
   let!(:subscriber) { create(:subscriber, id: 24) } 
   let(:new_subscriber) { build(:subscriber) }
   
-  scenario 'An email can only be entered one a day' do  
+  scenario 'register with an email that can only be entered one a day' do  
     visit root_path
     fill_in 'Email', with: new_subscriber.email
     click_button 'Subscribe!' 
@@ -18,7 +18,7 @@ feature 'Admin creates a new prize' do
     expect(page).to have_content 'Email can only be entered once a day'
   end
   
-  scenario 'win a prize matching a condition' do   
+  scenario 'wins a prize by matching a condition' do   
     visit root_path   
     fill_in 'Email', with: new_subscriber.email
     click_button 'Subscribe!' 
@@ -33,7 +33,7 @@ feature 'Admin creates a new prize' do
     expect(page).to have_content 'You almost get it. Try again!'
   end
   
-  scenario 'win a prize by carambola' do 
+  scenario 'wins a prize by carambola' do 
     # Create a new condition 
     list_condition = create(:list_condition)
     visit root_path 
