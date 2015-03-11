@@ -18,12 +18,12 @@ feature 'A subscriber' do
     expect(page).to have_content 'Email can only be entered once a day'
   end
   
-  #scenario 'wins a prize by matching a condition' do   
-  #  visit root_path   
-  #  fill_in 'Email', with: new_subscriber.email
-  #  click_button 'Subscribe!' 
-  #  expect(page).to have_content 'Congratulations!!!'
-  #end
+  scenario 'wins a prize by matching a condition' do   
+    visit root_path   
+    fill_in 'Email', with: new_subscriber.email
+    click_button 'Subscribe!' 
+    expect(page).to have_content 'Congratulations!!!'
+  end
   
   scenario 'not match any condition' do   
     visit root_path   
