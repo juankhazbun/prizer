@@ -1,6 +1,6 @@
 module SessionHelpers
   
-  # Helper to sign up in the admin section
+  # Helper to sign up in the admin
   def sign_up_with(user)
     visit root_path
     click_link 'Log in'
