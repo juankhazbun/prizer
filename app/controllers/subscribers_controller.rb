@@ -4,19 +4,25 @@ class SubscribersController < ApplicationController
 
   # POST /subscribers
   def create
+    
+    # Create the new subscriber
     @subscriber = Subscriber.new(subscriber_params)
     
-    if @subscriber.save
+    # Create the subscriber service to check for prizes
+    checker = SubscriberChecker::SubscriberChecker.new
+    
+    # Save and check if the subscriber match a condition
+    prize = checker.check_subscriber(@subscriber)
+    
+    # Check if the subscriber was succesfully saved
+    if prize != "error"
       
-      # Check if the subscriber win a prize
-      prize = @subscriber.check_prize
-      
-      if (prize != "")
+      if (prize != false)
         flash[:success] = "Congratulations!!!. You won a #{prize}."        
       else
         flash[:danger] = 'You almost get it. Try again!'
       end
-      redirect_to @subscriber
+      redirect_to @subscriber.reload
     else
       render "static_pages/home" 
     end

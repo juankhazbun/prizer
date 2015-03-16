@@ -2,56 +2,29 @@ require 'rails_helper'
 
 describe Prize do
   
-  before :all do
-    @prize = build(:prize)
-  end
+  subject(:prize) { build(:prize) }
   
-  context 'should have' do
+  context 'relationships' do
     
-    it 'many conditions' do
-      should have_many(:conditions)
-    end
+    it { is_expected.to have_many(:conditions) }
     
-    it 'many winners' do
-      should have_many(:winners)
-    end
+    it { is_expected.to have_many(:winners) }
     
-    it 'subscribers' do
-      should have_many(:subscribers)
-    end
+    it { is_expected.to have_many(:subscribers).through(:winners) }
     
   end  
   
-  it 'is valid with a description and number of existences' do
-    expect(@prize).to be_valid
-  end
+  it { is_expected.to be_valid }
   
   context 'is invalid' do
   
-      it 'when description is not given' do        
-        @prize.description = ''
-        should_not be_valid
-      end
+      it { is_expected.to validate_presence_of(:description) }
       
-      it 'when description is too short' do
-        @prize.description = 'a' * 4
-        should_not be_valid
-      end
+      it { is_expected.to validate_length_of(:description).is_at_least(6).is_at_most(30) }
       
-      it 'when description is too long' do
-        @prize.description = 'a' * 40
-        should_not be_valid
-      end
+      it { is_expected.to validate_presence_of(:existences) }
       
-      it 'when required existences is not given' do        
-        @prize.existences = nil
-        should_not be_valid
-      end
-      
-      it 'when existences is not numeric' do
-        @prize.existences = 'a'
-        should_not be_valid
-      end
+      it { is_expected.to validate_numericality_of(:existences) }
       
   end
   

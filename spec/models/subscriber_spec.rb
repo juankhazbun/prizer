@@ -1,41 +1,37 @@
 require 'rails_helper'
 
 describe Subscriber do   
+    
+  subject(:subscriber) { build(:subscriber) }
   
-  describe '#validate' do
+  context 'relationships' do
+
+    it { is_expected.to have_many(:winners) }
     
-    let(:subscriber) { build(:subscriber) }
+    it { is_expected.to have_many(:prizes).through(:winners) }
+    
+  end
   
-    it 'should have many winners' do
-      should have_many(:winners)
-    end
+  context 'is valid' do
     
-    it 'should have many prizes through winners' do
-      should have_many(:prizes).through(:winners)
-    end
-      
-    context 'is invalid' do
-      
-      it 'when required email is not given' do        
-        subscriber.email = ''
-        should_not be_valid
-      end
-      
-      it 'when email format is not valid' do
-        subscriber.email = 'invalid mail'
-        should_not be_valid
-      end
-      
-      it 'when email address is alreday subscribed' do
-        subscriber.email = "123@example.com"
-        subscriber.save
-        user_with_same_email = subscriber.dup
-        user_with_same_email.save
-        should_not be_valid
-      end
-      
-    end
+    it { is_expected.to be_valid }
     
+    it { is_expected.to allow_value("example@example.com").for(:email) }
+  end
+    
+  context 'is invalid' do
+    
+    it { is_expected.to validate_presence_of(:email) }  
+    
+    it { is_expected.to_not allow_value("foo").for(:email) }
+    
+    it 'should not allow email to be repeated in the same day' do
+      #subscriber.save
+      #user_with_same_email = subscriber.dup
+      subscriber.dup.save
+      is_expected.to_not be_valid
+    end
+  
   end
   
   describe '#check_prize' do   
@@ -126,6 +122,5 @@ describe Subscriber do
     end
     
   end
-  
   
 end

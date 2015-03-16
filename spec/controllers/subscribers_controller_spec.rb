@@ -3,7 +3,8 @@ require 'rails_helper'
 describe SubscribersController do 
 
   describe "POST create" do
-    describe "with valid params" do
+    context "with valid params" do
+      
       it "creates a new Subscriber" do
         expect {          
           post :create, subscriber: attributes_for(:subscriber)
@@ -16,7 +17,7 @@ describe SubscribersController do
       end
     end
 
-    describe "with invalid params" do
+    context "with invalid params" do
       it "does not save the new subscriber" do
         expect {
           post :create, subscriber: attributes_for(:invalid_subscriber)
