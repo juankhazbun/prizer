@@ -4,7 +4,7 @@
 # @author   Juan Carlos Hazbun Nieto<mailto:juankhazbun@gmail.com>
 # @version  1.0, May 2015
 # @since    1.0
-module SubscriberChecker 
+module Services 
   class SubscriberChecker
     
     # Register the subscriber and check if the subscriber 
@@ -22,8 +22,6 @@ module SubscriberChecker
         
         # Check if the subscriber win a prize
         status =  check_prize(subscriber.id)
-        
-        puts "\n\n\n#{status}\n\n\n"
         
         return status
         

@@ -9,7 +9,7 @@ class SubscribersController < ApplicationController
     @subscriber = Subscriber.new(subscriber_params)
     
     # Create the subscriber service to check for prizes
-    checker = SubscriberChecker::SubscriberChecker.new
+    checker = Services::SubscriberChecker.new
     
     # Save and check if the subscriber match a condition
     prize = checker.check_subscriber(@subscriber)
