@@ -53,6 +53,15 @@ ActiveRecord::Schema.define(version: 20150225164330) do
     t.datetime "updated_at"
   end
 
+  create_table "users", force: true do |t|
+    t.string   "username"
+    t.string   "email"
+    t.string   "encrypted_password"
+    t.string   "salt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "winners", force: true do |t|
     t.integer  "subscriber_id"
     t.integer  "prize_id"
