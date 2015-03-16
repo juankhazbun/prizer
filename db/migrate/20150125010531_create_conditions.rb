@@ -5,6 +5,7 @@ class CreateConditions < ActiveRecord::Migration
       t.string :type
       t.string :condition
       t.string :offset  
+      
           
       t.timestamps
     end
