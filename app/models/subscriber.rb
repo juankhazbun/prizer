@@ -7,6 +7,4 @@ class Subscriber < ActiveRecord::Base
   validates_uniqueness_of :email, conditions: -> { where(:created_at => (Time.now.beginning_of_day..Time.now.end_of_day)) }, 
       :message => "can only be entered once a day"
   
-  
-  
 end

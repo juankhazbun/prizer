@@ -5,14 +5,13 @@ class SubscribersController < ApplicationController
   # POST /subscribers
   def create
     
-    # Create the new subscriber
-    @subscriber = Subscriber.new(subscriber_params)
-    
     # Create the subscriber service to check for prizes
-    checker = SubscriberChecker.new
+    checker = SubscriberChecker.new(subscriber_params)
+    
+    @subscriber = checker.subscriber
     
     # Save and check if the subscriber match a condition
-    prize = checker.check_subscriber(@subscriber)
+    prize = checker.check_subscriber()
     
     # Check if the subscriber was succesfully saved
     if (prize != "error")
