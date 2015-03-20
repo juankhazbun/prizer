@@ -40,5 +40,24 @@ FactoryGirl.define do
       criteria '5'
       offset '100'
     end
+    
+    factory :koombea_condition_a do
+      association :prize
+      cond_type 'list'
+      criteria '50,100,2000'
+    end
+    
+    factory :koombea_condition_b do
+      association :prize
+      cond_type '%'
+      criteria '500'
+    end
+    
+    factory :koombea_condition_c do
+      association :prize
+      cond_type '%'
+      criteria '50'
+      offset '1000'
+    end
   end
 end
